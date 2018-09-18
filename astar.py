@@ -19,6 +19,10 @@ class State(goddity.State):
                                     in self.visited.items()
                                     if cost != float('inf')))
 
+    def render_action(self, edge):
+        (u,v) = edge
+        return '{} -> {}'.format(u,v)
+
     def step(self, edge):
         (u,v) = edge
         assert u in self.graph
@@ -33,4 +37,5 @@ state = State(graph, (0,0), (3,3))
 print('hello')
 
 if __name__ == '__main__':
-    goddity.run(state)
+    print("HELLOE")
+    goddity.run_app(state)
