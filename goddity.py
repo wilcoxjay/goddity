@@ -2,18 +2,22 @@ import copy
 import networkx as nx
 import http.server
 
-class State:
+from typing import Generic, TypeVar, Sequence
 
-    def step(self, action):
+A = TypeVar('A')
+
+class State(Generic[A]):
+
+    def step(self, action: A) -> None:
         pass
 
-    def heuristic(self):
+    def heuristic(self) -> Sequence[A]:
         pass
 
-def run(state):
+def run(state: State) -> None:
 
     init = copy.deepcopy(state)
-    graph = nx.DiGraph()
+    graph: nx.DiGraph[State] = nx.DiGraph()
     graph.add_node(init)
     old_states = [init]
 
@@ -29,20 +33,20 @@ def run(state):
             try:
                 choice = input('Pick one: ')
                 if choice == 'b':
-                    choice = old_states.pop()
+                    new_state = old_states.pop()
                     break
-                choice = possible[int(choice)]
+                new_state = possible[int(choice)]
                 break
             except Exception as e:
                 print(e)
                 pass
 
         # take the action
-        if choice in graph:
-            state = copy.deepcopy(choice)
+        if new_state in graph:
+            state = copy.deepcopy(new_state)
         else:
             state.step(choice)
-            new_state = copy.deepcopy(state)
+            new_state = copy.deepcopy(new_state)
             graph.add_edge(old_states[-1], new_state)
             old_states.append(new_state)
 
